@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma de Estudio Diario</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .hidden { display: none; }
+        iframe { width: 100%; height: 400px; border: none; }
+        textarea { width: 100%; height: 200px; margin: 10px 0; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        input[type="password"] { padding: 10px; width: 100%; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Plataforma de Estudio Diario</h1>
+        
+        <!-- Sección de acceso -->
+        <div id="login">
+            <h2>Acceso Restringido</h2>
+            <input type="password" id="password" placeholder="Ingresa la contraseña">
+            <button onclick="checkAccess()">Acceder</button>
+        </div>
+        
+        <!-- Contenido principal (oculto hasta acceso) -->
+        <div id="content" class="hidden">
+            <h2>Clase del Día</h2>
+            <p>Aquí está el video de la clase (extraído de YouTube). Cambia la URL por la de hoy.</p>
+            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe> <!-- Reemplaza con tu video de YT -->
+            
+            <h3>Líneas de la Clase (Transcripciones)</h3>
+            <textarea id="classLines" readonly>
+Aquí van las líneas o transcripciones de la clase del día. Por ejemplo:
+- Línea 1: Introducción al tema.
+- Línea 2: Explicación detallada.
+- Línea 3: Ejemplos prácticos.
+
+(Edita esto manualmente o genera desde YouTube subtítulos.)
+            </textarea>
+            
+            <h3>Documento de Práctica</h3>
+            <p>Haz los ejercicios aquí y guarda tus respuestas.</p>
+            <textarea id="practiceDoc" placeholder="Escribe tus ejercicios y respuestas aquí..."></textarea>
+            <button onclick="savePractice()">Guardar Práctica</button>
+            
+            <h3>Subir Líneas de la Clase</h3>
+            <p>Sube un archivo con las líneas (e.g., .txt o .pdf).</p>
+            <input type="file" id="uploadLines">
+            <button onclick="uploadFile()">Subir Archivo</button>
+            <p id="uploadStatus"></p>
+        </div>
+    </div>
+
+    <script>
+        // Contraseña simple (cámbiala por algo seguro)
+        const correctPassword = "estudio2023"; // Cambia esto
+
+        function checkAccess() {
+            const password = document.getElementById('password').value;
+            if (password === correctPassword) {
+                document.getElementById('login').classList.add('hidden');
+                document.getElementById('content').classList.remove('hidden');
+            } else {
+                alert('Contraseña incorrecta. Intenta de nuevo.');
+            }
+        }
+
+        function savePractice() {
+            const practice = document.getElementById('practiceDoc').value;
+            localStorage.setItem('practiceDoc', practice);
+            alert('Práctica guardada localmente.');
+        }
+
+        function uploadFile() {
+            const file = document.getElementById('uploadLines').files[0];
+            if (file) {
+                // Simulación de subida (en realidad, guarda en localStorage)
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    localStorage.setItem('uploadedLines', e.target.result);
+                    document.getElementById('uploadStatus').textContent = 'Archivo subido exitosamente (simulado).';
+                };
+                reader.readAsText(file);
+            } else {
+                alert('Selecciona un archivo primero.');
+            }
+        }
+
+        // Cargar práctica guardada al cargar la página
+        window.onload = function() {
+            const savedPractice = localStorage.getItem('practiceDoc');
+            if (savedPractice) {
+                document.getElementById('practiceDoc').value = savedPractice;
+            }
+        };
+    </script>
+</body>
+</html>
